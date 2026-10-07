@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CMYK · RGB · HSV</title>
+<style>
+:root{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color-scheme:light dark}
+*{box-sizing:border-box} body{margin:0;background:#eef1f5;color:#172033}
+#app{min-height:100vh;background:#eef1f5;padding:32px 18px}
+.container{max-width:1100px;margin:auto}.head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:24px}
+h1{margin:0;font-size:32px}.sub{margin:7px 0 0;color:#667085}.badge{padding:8px 12px;border:1px solid #d5dbe5;border-radius:999px;background:#fff;font-size:13px}
+.preview{height:170px;border-radius:18px;background:#000;box-shadow:0 14px 35px #0002;display:flex;align-items:end;padding:18px;color:#fff}
+.preview span{background:#0008;padding:7px 10px;border-radius:9px;font-family:ui-monospace,monospace}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:16px}
+.card{background:#fff;border:1px solid #dce1e9;border-radius:16px;padding:18px}
+.card h2{font-size:18px;margin:0 0 15px}.row{display:grid;grid-template-columns:1fr 82px;gap:12px;align-items:center;margin:13px 0}
+label{font-size:14px;font-weight:650;display:flex;justify-content:space-between;margin-bottom:7px}
+input[type=number]{width:100%;padding:9px;border:1px solid #cbd2dc;border-radius:9px;background:#fff;color:#172033}
+input[type=range]{width:100%}
+.swatches{display:flex;gap:10px;margin-top:16px}.swatch{flex:1;height:45px;border-radius:10px;border:1px solid #ccd3de}
+.tools{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.tools button{border:1px solid #ccd3de;background:#fff;border-radius:9px;padding:9px 13px;cursor:pointer}
+.note{margin-top:16px;padding:13px 15px;background:#f7f8fa;border-radius:12px;font-size:13px;color:#5d6675}
+@media(max-width:800px){.grid{grid-template-columns:1fr}.head{align-items:start;flex-direction:column}}
+@media(prefers-color-scheme:dark){#app{background:#11151c;color:#eef2f7}.sub{color:#aab3c1}.badge,.card,.tools button,input[type=number]{background:#1a202a;color:#eef2f7;border-color:#343d4b}.card{border-color:#343d4b}.note{background:#191e26;color:#aab3c1}.preview{box-shadow:none}.tools button{color:#eef2f7}}
+</style>
+</head>
+<body><main id="app"><div class="container">
+<div class="head"><div><h1>CMYK · RGB · HSV</h1><p class="sub">Интерактивный конвертер цветовых моделей</p></div><div class="badge">Лабораторная работа · чётный вариант</div></div>
+<div id="preview" class="preview"><span id="hex">#3366CC</span></div>
+<div class="grid">
+<section class="card"><h2>RGB</h2>
+<div class="row"><div><label>R <span id="rv">51</span></label><input id="r" type="range" min="0" max="255" value="51"></div><input id="rn" type="number" min="0" max="255" value="51"></div>
+<div class="row"><div><label>G <span id="gv">102</span></label><input id="g" type="range" min="0" max="255" value="102"></div><input id="gn" type="number" min="0" max="255" value="102"></div>
+<div class="row"><div><label>B <span id="bv">204</span></label><input id="b" type="range" min="0" max="255" value="204"></div><input id="bn" type="number" min="0" max="255" value="204"></div></section>
+<section class="card"><h2>CMYK</h2>
+<div class="row"><div><label>C <span id="cv">75%</span></label><input id="c" type="range" min="0" max="100" value="75"></div><input id="cn" type="number" min="0" max="100" value="75"></div>
+<div class="row"><div><label>M <span id="mv">50%</span></label><input id="m" type="range" min="0" max="100" value="50"></div><input id="mn" type="number" min="0" max="100" value="50"></div>
+<div class="row"><div><label>Y <span id="yv">0%</span></label><input id="y" type="range" min="0" max="100" value="0"></div><input id="yn" type="number" min="0" max="100" value="0"></div>
+<div class="row"><div><label>K <span id="kv">20%</span></label><input id="k" type="range" min="0" max="100" value="20"></div><input id="kn" type="number" min="0" max="100" value="20"></div></section>
+<section class="card"><h2>HSV</h2>
+<div class="row"><div><label>H <span id="hv">220°</span></label><input id="h" type="range" min="0" max="360" value="220"></div><input id="hn" type="number" min="0" max="360" value="220"></div>
+<div class="row"><div><label>S <span id="sv">75%</span></label><input id="s" type="range" min="0" max="100" value="75"></div><input id="sn" type="number" min="0" max="100" value="75"></div>
+<div class="row"><div><label>V <span id="vv">80%</span></label><input id="v" type="range" min="0" max="100" value="80"></div><input id="vn" type="number" min="0" max="100" value="80"></div></section>
+</div>
+<div class="tools"><button id="picker">🎨 Выбрать цвет</button><button id="copy">Копировать HEX</button><input id="color" type="color" value="#3366cc" style="width:45px;height:38px;padding:0;border:0"></div>
+<div class="note">Любое изменение координаты в любой модели автоматически пересчитывает две остальные модели. Формулы работают в диапазонах RGB 0–255, CMYK 0–100%, HSV: H 0–360°, S/V 0–100%.</div>
+</div></main>
+<script>
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+let updating=false;
+function rgbToCmyk(r,g,b){r/=255;g/=255;b/=255;let k=1-Math.max(r,g,b);if(k>=1)return[0,0,0,100];return[(1-r-k)/(1-k)*100,(1-g-k)/(1-k)*100,(1-b-k)/(1-k)*100,k*100]}
+function rgbToHsv(r,g,b){r/=255;g/=255;b/=255;let mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn,h=0;if(d){if(mx===r)h=60*(((g-b)/d)%6);else if(mx===g)h=60*((b-r)/d+2);else h=60*((r-g)/d+4)}if(h<0)h+=360;return[h,mx?d/mx*100:0,mx*100]}
+function cmykToRgb(c,m,y,k){c/=100;m/=100;y/=100;k/=100;return[Math.round(255*(1-c)*(1-k)),Math.round(255*(1-m)*(1-k)),Math.round(255*(1-y)*(1-k))]}
+function hsvToRgb(h,s,v){s/=100;v/=100;let c=v*s,x=c*(1-Math.abs((h/60)%2-1)),m=v-c,r=0,g=0,b=0;if(h<60)[r,g,b]=[c,x,0];else if(h<120)[r,g,b]=[x,c,0];else if(h<180)[r,g,b]=[0,c,x];else if(h<240)[r,g,b]=[0,x,c];else if(h<300)[r,g,b]=[x,0,c];else[r,g,b]=[c,0,x];return[Math.round((r+m)*255),Math.round((g+m)*255),Math.round((b+m)*255)]}
+function hex(r,g,b){return'#'+[r,g,b].map(x=>x.toString(16).padStart(2,'0')).join('').toUpperCase()}
+function setPair(id,val){$(id).value=val;$(id+'n').value=val}
+function render(source){
+ if(updating)return;updating=true;
+ let rgb;
+ if(source==='rgb')rgb=[$('rn').value,$('gn').value,$('bn').value].map(Number);
+ if(source==='cmyk')rgb=cmykToRgb(...['cn','mn','yn','kn'].map(x=>Number($(x).value)));
+ if(source==='hsv')rgb=hsvToRgb(...['hn','sn','vn'].map(x=>Number($(x).value)));
+ rgb=rgb.map((x,i)=>clamp(Math.round(x),0,255));
+ let [r,g,b]=rgb,[c,m,y,k]=rgbToCmyk(r,g,b),[h,s,v]=rgbToHsv(r,g,b);
+ setPair('r',r);setPair('g',g);setPair('b',b);
+ setPair('c',+c.toFixed(1));setPair('m',+m.toFixed(1));setPair('y',+y.toFixed(1));setPair('k',+k.toFixed(1));
+ setPair('h',+h.toFixed(1));setPair('s',+s.toFixed(1));setPair('v',+v.toFixed(1));
+ $('rv').textContent=r;$('gv').textContent=g;$('bv').textContent=b;
+ ['c','m','y','k','s','v'].forEach(x=>$(x+'v').textContent=Number($(x+'n').value).toFixed(1)+'%');
+ $('hv').textContent=Number($('hn').value).toFixed(1)+'°';
+ let hx=hex(r,g,b);$('hex').textContent=hx;$('preview').style.background=hx;$('color').value=hx.toLowerCase();updating=false;
+}
+['r','g','b','c','m','y','k','h','s','v'].forEach(id=>{[$(id),$(id+'n')].forEach(el=>el.addEventListener('input',()=>{if(!updating){$(id+'n').value=$(id).value;$(id).value=$(id+'n').value;render(['r','g','b'].includes(id)?'rgb':['c','m','y','k'].includes(id)?'cmyk':'hsv')}}))});
+$('color').addEventListener('input',e=>{let n=parseInt(e.target.value.slice(1),16);setPair('r',n>>16&255);setPair('g',n>>8&255);setPair('b',n&255);render('rgb')});
+$('picker').onclick=()=> $('color').click();
+$('copy').onclick=()=>navigator.clipboard?.writeText($('hex').textContent);
+render('rgb');
+</script></body></html>
